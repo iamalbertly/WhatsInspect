@@ -100,6 +100,27 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
+  function fetchCapturedData() {
+    chrome.storage.local.get(null, (items) => {
+      const data = Object.keys(items).map(key => {
+        const decryptedData = decryptData(items[key]);
+        return decryptedData;
+      });
+      renderTable(data);
+      renderVisualization(data);
+    });
+  }
+
+  function decryptData(ciphertext) {
+    try {
+      // Use the same decryption method as background script
+      return JSON.parse(atob(ciphertext));
+    } catch (error) {
+      console.error('Error decrypting data:', error);
+      return { error: 'Failed to decrypt data' };
+    }
+  }
+
   exportJsonButton.addEventListener('click', () => exportToJson(capturedData));
   exportCsvButton.addEventListener('click', () => exportToCsv(capturedData));
   clearDataButton.addEventListener('click', () => clearData());
@@ -108,6 +129,5 @@ document.addEventListener('DOMContentLoaded', function() {
   filterType.addEventListener('change', filterAndSearch);
 
   // Initial render
-  renderTable(capturedData);
-  renderVisualization(capturedData);
+  fetchCapturedData();
 }); 

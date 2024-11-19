@@ -1,27 +1,71 @@
 // Initialize content script
 console.log('WhatsInspect content script loaded');
 
-// Listen for messages from the background script
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message.type === 'INSPECT_START') {
-    // Handle inspection start
-    console.log('Starting inspection');
-    sendResponse({ status: 'started' });
-  }
-  if (message.type === 'AUTHENTICATION_DETECTED') {
-    console.log('Authentication detected, starting data monitoring');
-    // Start data monitoring processes here
-    sendResponse({ status: 'monitoring_started' });
-  }
-  if (message.type === 'CAPTURED_DATA') {
-    displayCapturedData(message.data);
-    sendResponse({ status: 'data_displayed' });
-  }
-  return true;
-});
+// Function to notify background script that monitoring should start
+function initializeMonitoring() {
+  chrome.runtime.sendMessage({ 
+    type: 'INITIALIZE_MONITORING',
+    url: window.location.href 
+  }, response => {
+    console.log('Monitoring initialization response:', response);
+  });
+}
+
+// Function to detect WhatsApp Web authentication
+function detectAuthentication() {
+  // Watch for changes in the DOM that indicate successful authentication
+  const observer = new MutationObserver((mutations) => {
+    for (const mutation of mutations) {
+      if (mutation.addedNodes.length) {
+        // Check for elements that indicate successful WhatsApp Web login
+        const authElement = document.querySelector('.app');
+        if (authElement) {
+          console.log('WhatsApp Web authentication detected');
+          chrome.runtime.sendMessage({ 
+            type: 'AUTHENTICATION_DETECTED' 
+          }, response => {
+            console.log('Authentication notification response:', response);
+          });
+          observer.disconnect();
+        }
+      }
+    }
+  });
+
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true
+  });
+}
 
 // Function to display captured data
 function displayCapturedData(data) {
   console.log('Captured Data:', data);
-  // Implement UI updates or data processing as needed
-} 
+  // Store the captured data
+  chrome.runtime.sendMessage({
+    type: 'STORE_CAPTURED_DATA',
+    data: data
+  });
+}
+
+// Initialize monitoring when the page loads
+if (window.location.hostname === 'web.whatsapp.com') {
+  console.log('WhatsApp Web detected, initializing monitoring...');
+  initializeMonitoring();
+  detectAuthentication();
+}
+
+// Listen for messages from the background script
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  switch (message.type) {
+    case 'CAPTURED_DATA':
+      displayCapturedData(message.data);
+      sendResponse({ status: 'data_displayed' });
+      break;
+    case 'MONITORING_STATUS':
+      console.log('Monitoring status:', message.status);
+      sendResponse({ status: 'status_received' });
+      break;
+  }
+  return true;
+}); 

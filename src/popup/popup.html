@@ -9,9 +9,27 @@
     <h1>WhatsInspect</h1>
     <div class="controls">
       <button id="toggleInspect">Start Inspection</button>
+      <button id="openDashboard">Open Dashboard</button>
     </div>
     <div class="status">
       <p id="statusText">Status: Inactive</p>
+      <span id="newDataBadge" class="badge hidden">New Data</span>
+    </div>
+    <div class="activity-container">
+      <div class="activity-header">
+        <h2>Recent Activity</h2>
+        <span id="liveIndicator" class="live-indicator">●</span>
+      </div>
+      <div class="activity-list" id="activityList">
+        <!-- Activity items will be populated here -->
+      </div>
+    </div>
+    <div class="footer">
+      <span id="captureCount">Captured: 0 items</span>
+      <div class="footer-controls">
+        <button id="pauseUpdates" class="small-button">Pause Updates</button>
+        <button id="clearData" class="small-button">Clear Data</button>
+      </div>
     </div>
   </div>
   <script src="popup.js"></script>

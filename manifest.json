@@ -5,7 +5,6 @@
   "description": "A Chrome extension for inspecting WhatsApp Web network traffic",
   "permissions": [
     "webRequest",
-    "webRequestBlocking",
     "storage",
     "scripting"
   ],
@@ -13,7 +12,8 @@
     "https://web.whatsapp.com/*"
   ],
   "background": {
-    "service_worker": "src/background/background.js"
+    "service_worker": "src/background/background.js",
+    "type": "module"
   },
   "content_scripts": [
     {
@@ -21,6 +21,10 @@
       "js": ["src/content/content.js"]
     }
   ],
+  "web_accessible_resources": [{
+    "resources": ["src/lib/*.js"],
+    "matches": ["https://web.whatsapp.com/*"]
+  }],
   "action": {
     "default_popup": "src/popup/popup.html",
     "default_icon": {
