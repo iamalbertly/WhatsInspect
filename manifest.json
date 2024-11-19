@@ -1,0 +1,37 @@
+{
+  "manifest_version": 3,
+  "name": "WhatsInspect",
+  "version": "1.0.0",
+  "description": "A Chrome extension for inspecting WhatsApp Web network traffic",
+  "permissions": [
+    "webRequest",
+    "webRequestBlocking",
+    "storage",
+    "scripting"
+  ],
+  "host_permissions": [
+    "https://web.whatsapp.com/*"
+  ],
+  "background": {
+    "service_worker": "src/background/background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://web.whatsapp.com/*"],
+      "js": ["src/content/content.js"]
+    }
+  ],
+  "action": {
+    "default_popup": "src/popup/popup.html",
+    "default_icon": {
+      "16": "assets/icon-16.png",
+      "48": "assets/icon-48.png",
+      "128": "assets/icon-128.png"
+    }
+  },
+  "icons": {
+    "16": "assets/icon-16.png",
+    "48": "assets/icon-48.png",
+    "128": "assets/icon-128.png"
+  }
+} 

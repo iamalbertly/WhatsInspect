@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WhatsInspect Dashboard</title>
+  <link rel="stylesheet" href="dashboard.css">
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>WhatsInspect Dashboard</h1>
+    <div class="controls">
+      <input type="text" id="searchInput" placeholder="Search messages...">
+      <select id="filterType">
+        <option value="">All Types</option>
+        <option value="type1">Type 1</option>
+        <option value="type2">Type 2</option>
+        <!-- Add more types as needed -->
+      </select>
+      <button id="exportJson">Export JSON</button>
+      <button id="exportCsv">Export CSV</button>
+      <button id="clearData">Clear Data</button>
+    </div>
+    <table id="dataTable">
+      <thead>
+        <tr>
+          <th data-sort="timestamp">Timestamp</th>
+          <th data-sort="type">Message Type</th>
+          <th data-sort="endpoint">Endpoint</th>
+          <th>Data</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Data rows will be populated here -->
+      </tbody>
+    </table>
+    <div id="visualization"></div>
+  </div>
+  <script src="dashboard.js"></script>
+</body>
+</html> 
