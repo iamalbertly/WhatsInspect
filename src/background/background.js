@@ -5,16 +5,27 @@ import { mqtt } from '../lib/mqtt-packet.js';
 let isMonitoring = false;
 let monitoringTabId = null;
 let dataBatch = [];
-const BATCH_SIZE = 20;
-const MAX_STORAGE_ITEMS = 1000;
-const BATCH_INTERVAL = 2000; // 2 seconds
-const CLEANUP_INTERVAL = 1800000; // 30 minutes
+let messageQueue = [];
+
+// Configuration constants
+const CONFIG = {
+  BATCH: {
+    SIZE: 20,
+    INTERVAL: 2000, // 2 seconds
+    PROCESS_INTERVAL: 500 // Process every 500ms
+  },
+  STORAGE: {
+    MAX_ITEMS: 1000,
+    RETENTION_DAYS: 7,
+    CLEANUP_INTERVAL: 1800000 // 30 minutes
+  }
+};
 
 // Storage configuration
 const STORAGE_CONFIG = {
-  maxItems: MAX_STORAGE_ITEMS,
-  retentionDays: 7,
-  batchSize: BATCH_SIZE
+  maxItems: CONFIG.STORAGE.MAX_ITEMS,
+  retentionDays: CONFIG.STORAGE.RETENTION_DAYS,
+  batchSize: CONFIG.BATCH.SIZE
 };
 
 // Initialize storage configuration
@@ -69,13 +80,13 @@ function logCapturedData(data) {
 
   dataBatch.push(storedData);
 
-  if (dataBatch.length >= BATCH_SIZE) {
+  if (dataBatch.length >= CONFIG.BATCH.SIZE) {
     if (batchTimeout) {
       clearTimeout(batchTimeout);
     }
     processBatch();
   } else if (!batchTimeout) {
-    batchTimeout = setTimeout(processBatch, BATCH_INTERVAL);
+    batchTimeout = setTimeout(processBatch, CONFIG.BATCH.INTERVAL);
   }
 }
 
@@ -117,7 +128,7 @@ function initializeStorageCleanup() {
   cleanupOldData();
   
   // Set up periodic cleanup
-  setInterval(cleanupOldData, CLEANUP_INTERVAL);
+  setInterval(cleanupOldData, CONFIG.STORAGE.CLEANUP_INTERVAL);
 }
 
 // Function to update storage configuration
@@ -231,13 +242,9 @@ function processWebSocketData(details) {
 }
 
 // Enhanced message queue processing
-let messageQueue = [];
-const BATCH_SIZE = 10;
-const PROCESS_INTERVAL = 500; // Process every 500ms
-
 setInterval(() => {
   if (messageQueue.length > 0 && isMonitoring) {
-    const batch = messageQueue.splice(0, BATCH_SIZE);
+    const batch = messageQueue.splice(0, CONFIG.BATCH.SIZE);
     batch.forEach(data => {
       try {
         decodeMQTTMessage(data);
@@ -246,7 +253,7 @@ setInterval(() => {
       }
     });
   }
-}, PROCESS_INTERVAL);
+}, CONFIG.BATCH.PROCESS_INTERVAL);
 
 // Message handling
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {

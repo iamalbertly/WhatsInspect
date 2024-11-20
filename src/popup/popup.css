@@ -170,4 +170,97 @@ button:hover {
 
 .activity-item.highlight {
   background-color: rgba(18, 140, 126, 0.1);
+}
+
+.activity-item.new {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+
+.activity-item.slide-in {
+  animation: slideIn 0.3s ease-out forwards;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.activity-type {
+  font-size: 12px;
+  color: #128C7E;
+  font-weight: bold;
+}
+
+.activity-time {
+  font-size: 11px;
+  color: #666;
+}
+
+.activity-source {
+  font-size: 11px;
+  color: #999;
+  margin-left: auto;
+}
+
+.message {
+  padding: 8px;
+  border-radius: 4px;
+  margin: 4px 0;
+}
+
+.message.incoming {
+  background-color: #DCF8C6;
+}
+
+.message.outgoing {
+  background-color: #E8E8E8;
+}
+
+.message-sender {
+  font-weight: bold;
+  margin-right: 8px;
+}
+
+.contact-update {
+  padding: 4px;
+  background-color: #F0F0F0;
+  border-radius: 4px;
+}
+
+#activityList {
+  overflow-y: auto;
+  position: relative;
+  height: 400px;
+  scroll-behavior: smooth;
+  will-change: transform;
+}
+
+.activity-item {
+  position: absolute;
+  left: 0;
+  right: 0;
+  padding: 8px;
+  background: white;
+  border-bottom: 1px solid #eee;
+  transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+  will-change: transform, opacity;
+}
+
+.live-indicator {
+  transition: opacity 0.3s ease-out;
+}
+
+.live-indicator.active {
+  color: #25D366;
+}
+
+#newDataBadge {
+  transition: opacity 0.3s ease-out;
 } 

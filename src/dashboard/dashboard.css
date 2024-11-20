@@ -42,4 +42,82 @@ tr:nth-child(even) {
 
 tr:hover {
   background-color: #f1f1f1;
+}
+
+.dashboard-container {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+}
+
+.card {
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.sort-icon {
+  font-size: 0.8em;
+  margin-left: 0.5em;
+  opacity: 0.5;
+}
+
+th[data-sort] {
+  cursor: pointer;
+}
+
+th[data-sort]:hover .sort-icon {
+  opacity: 1;
+}
+
+.message-content {
+  max-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.table td {
+  vertical-align: middle;
+}
+
+.badge {
+  font-weight: normal;
+  font-size: 0.9em;
+}
+
+#messageTypeChart {
+  max-height: 200px;
+}
+
+.modal-body img {
+  max-width: 100%;
+  height: auto;
+}
+
+.navbar {
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Message type indicators */
+.message-type-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 8px;
+}
+
+.type-text { background-color: #25D366; }
+.type-image { background-color: #34B7F1; }
+.type-video { background-color: #ECE5DD; }
+.type-audio { background-color: #075E54; }
+.type-document { background-color: #128C7E; }
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .card-body {
+    padding: 1rem;
+  }
+  
+  .message-content {
+    max-width: 200px;
+  }
 } 
